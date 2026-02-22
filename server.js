@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 8080;
 
 app.use (cors());
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static('web'));
 
 const pool = new Pool({
     host: process.env.DB_HOST,
@@ -23,23 +23,26 @@ const pool = new Pool({
 // все сотрудники
 app.get('/api/employees', async (req, res) => {
     try {
-        const{department, position} = req.query;
-        let query = 'select * from employees where fired == false';
+        const { department, position } = req.query;
+        let query = 'select * from employees where fired = false';
         let params = [];
+        
         if (department) {
-        query += ' and department ilike $' + params.length;
-        params.push(`%${department}%`);
+            params.push(`%${department}%`);
+            query += ' and department ilike $${params.length}';
+        }
+        if (position) {
+            params.push(`%${position}%`);
+            query += ' and position ilike $${params.length}';
+        }
+        query += ' order by full_name';
+        
+        const result = await pool.query(query, params);
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
     }
-    if (position) {
-      query += ' and position ilike $' + params.length;
-      params.push(`%${position}%`);
-    }
-    query += 'order by full_name';
-    const result = await pool.query(query, params);
-    res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
 });
 
 //сортировка по имени
@@ -107,6 +110,11 @@ app.patch('/api/employees/:id/fire', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 })
+
+app.get('/api/test', (req, res) => {
+    res.json({ message: 'Сервер работает!' });
+});
+
 app.listen(PORT, () => {
   console.log(`Сервер запущен на http://localhost:${PORT}`);
 });
