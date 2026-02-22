@@ -3,6 +3,7 @@ const express = require(express);
 const {Pool} = require('pg');
 const cors = require(cors);
 const path = require('path');
+const { error } = require('console');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -19,6 +20,7 @@ const pool = new Pool({
     password: process.env.DB_PASSWORD,
 });
 
+// все сотрудники
 app.get('/api/employees', async (req, res) => {
     try {
         const{departament, position} = req.query;
@@ -39,3 +41,26 @@ app.get('/api/employees', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+//сортировка по имени
+app.get('/api/employees/search/:name', async (req, res) => {
+    try{
+        const result = await pool.query('select * from employees where full_name ilike $1',
+            [`%${req.params.name}%`]
+        );
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({error: err.message});
+    }
+});
+
+//один по id
+app.get('api/employees/:id', async (req, res) => {
+    try{
+        const result = await
+        pool.query('select * from employees where id = $1', [req.params.id]);
+        res.json(result.rows[0]);
+    } catch (err) {
+        res.status(500).json({error: err.message});
+    }
+})
