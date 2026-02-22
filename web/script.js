@@ -101,3 +101,73 @@ function openModal(id = null) {
   document.getElementById('modal').style.display = 'block';
   applyMasks();
 }
+
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+}
+
+
+document.getElementById('employeeForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const data = {
+    full_name: document.getElementById('full_name').value,
+    birth_date: document.getElementById('birth_date').value,
+    passport: document.getElementById('passport').value.replace(/\s/g, ''),
+    contacts: document.getElementById('contacts').value,
+    address: document.getElementById('address').value,
+    department: document.getElementById('department').value,
+    position: document.getElementById('position').value,
+    salary: parseFloat(document.getElementById('salary').value) || 0,
+    hire_date: document.getElementById('hire_date').value,
+  };
+
+  try {
+    let res;
+    if (editingId) {
+      res = await fetch(`/api/employees/${editingId}`, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+    } else {
+      res = await fetch('/api/employees', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+    }
+    if (res.ok) {
+      closeModal();
+      loadEmployees();
+    } else {
+      const err = await res.json();
+      alert(err.error);
+    }
+  } catch (err) {
+    alert('Ошибка сохранения: ' + err.message);
+  }
+});
+
+async function editEmployee(id) {
+  openModal(id);
+}
+
+// уволить
+async function fireEmployee(id) {
+  if (confirm('Уволить сотрудника?')) {
+    try {
+      const res = await fetch(`/api/employees/${id}/fire`, { method: 'PATCH' });
+      if (res.ok) loadEmployees();
+      else alert('Ошибка увольнения');
+    } catch (err) {
+      alert('Ошибка: ' + err.message);
+    }
+  }
+}
+
+//фильтрация
+document.getElementById('filterDept').addEventListener('input', () => {
+  const dept = document.getElementById('filterDept').value;
+  const pos = document.getElementById('filterPos').value;
+  loadEmployees(dept, pos);
+});
+document.getElementById('filterPos').addEventListener('input', () => {
+  const dept = document.getElementById('filterDept').value;
+  const pos = document.getElementById('filterPos').value;
+  loadEmployees(dept, pos);
+});
+
+
+loadEmployees();
