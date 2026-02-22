@@ -1,7 +1,7 @@
 require('dotenv').config();
-const express = require(express);
+const express = require('express');
 const {Pool} = require('pg');
-const cors = require(cors);
+const cors = require('cors');
 const path = require('path');
 const { error } = require('console');
 
@@ -23,15 +23,15 @@ const pool = new Pool({
 // все сотрудники
 app.get('/api/employees', async (req, res) => {
     try {
-        const{departament, position} = req.query;
+        const{department, position} = req.query;
         let query = 'select * from employees where fired == false';
         let params = [];
-        if (departament) {
-        query += 'and departament ilike $' + params.length;
+        if (department) {
+        query += ' and department ilike $' + params.length;
         params.push(`%${department}%`);
     }
     if (position) {
-      query += 'and position ilike $' + params.length;
+      query += ' and position ilike $' + params.length;
       params.push(`%${position}%`);
     }
     query += 'order by full_name';
@@ -55,7 +55,7 @@ app.get('/api/employees/search/:name', async (req, res) => {
 });
 
 //один по id
-app.get('api/employees/:id', async (req, res) => {
+app.get('/api/employees/:id', async (req, res) => {
     try{
         const result = await
         pool.query('select * from employees where id = $1', [req.params.id]);
@@ -106,4 +106,7 @@ app.patch('/api/employees/:id/fire', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+})
+app.listen(PORT, () => {
+  console.log(`Сервер запущен на http://localhost:${PORT}`);
 });

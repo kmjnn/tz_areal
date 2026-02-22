@@ -3,7 +3,7 @@ let editEmp = null;
 
 async function loadEmployees(dept = '', pos = '') {
     try {
-        const url = `/api/employees?departament=${dept}&position=${pos}`;
+        const url = `/api/employees?department=${dept}&position=${pos}`;
         const res = await fetch(url);
         employees = await res.json();
         renderTable();
@@ -73,7 +73,7 @@ async function loadEmployees(dept = '', pos = '') {
 }
 
 async function searchEmployee(params) {
-    const name = document.getElementById('searchName').ariaValueMax;
+    const name = document.getElementById('searchName').value;
     if (!name) return loadEmployees();
     try{
         const res = await fetch(`/api/employees/search/${name}`);
