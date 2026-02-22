@@ -42,22 +42,39 @@ function applyMasks(){
         let x = e.target.value.replace(/\D/g, '').match(/(\d{0,4})(\d{0,6})/);
         e.target.value = !x[2] ? x[1] : x[1] + ' ' + x[2];
     })
-    const contactsInput = document.getElementById('contacts');
-    contactsInput.value = '';
-    contactsInput.addEventListener('input', (e) => { 
-        let value = e.target.value.replace(/\D/g, '');
-        let formattedValue = '';
+        const contactsInput = document.getElementById('contacts');
     
-        if (value.length > 0) {
-        formattedValue = '+7 (';
-        if (value.length > 0) formattedValue += value.slice(0, 3);
-        if (value.length > 3) formattedValue += ') ' + value.slice(3, 6);
-        if (value.length > 6) formattedValue += '-' + value.slice(6, 8);
-        if (value.length > 8) formattedValue += '-' + value.slice(8, 10);
+    contactsInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        
+        if (value.length === 0) {
+            e.target.value = '';
+            return;
+        }
+
+        if (value[0] === '8' || value[0] === '7') {
+            value = '7' + value.slice(1);
+        } else {
+            value = '7' + value;
+        }
+
+        value = value.slice(0, 11);
+
+        let formattedValue = '+7';
+        if (value.length > 1) {
+            formattedValue += ' (' + value.slice(1, 4);
+        }
+        if (value.length > 4) {
+            formattedValue += ') ' + value.slice(4, 7);
+        }
+        if (value.length > 7) {
+            formattedValue += '-' + value.slice(7, 9);
+        }
+        if (value.length > 9) {
+            formattedValue += '-' + value.slice(9, 11);
         }
         
         e.target.value = formattedValue;
-        e.target.setSelectionRange(formattedValue.length, formattedValue.length);
     });
 }
 
