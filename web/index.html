@@ -30,6 +30,29 @@
       <tbody id="tableBody"></tbody>
     </table>
 
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle">Новый сотрудник</h2>
+        <form id="employeeForm">
+          <input type="hidden" id="editId">
+          <label>ФИО: <input type="text" id="full_name" required></label>
+          <label>Дата рождения: <input type="date" id="birth_date"></label>
+          <label>Паспорт: <input type="text" id="passport" placeholder="4512 345678"></label>
+          <label>Контакты: <input type="text" id="contacts" placeholder="+7 (999) 999-99-99"></label>
+          <label>Адрес: <textarea id="address"></textarea></label>
+          <label>Отдел: <input type="text" id="department"></label>
+          <label>Должность: <input type="text" id="position"></label>
+          <label>Зарплата: <input type="number" id="salary" step="0.01"></label>
+          <label>Дата приема: <input type="date" id="hire_date" required></label>
+          <button type="submit">Сохранить</button>
+        </form>
+      </div>
+    </div>
+
+    <button onclick="openModal()">Добавить сотрудника</button>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
