@@ -64,3 +64,46 @@ app.get('api/employees/:id', async (req, res) => {
         res.status(500).json({error: err.message});
     }
 })
+
+//CRUD
+//create
+app.post('/api/employees', async (req, res) => {
+    try{
+        const{full_name, birth_date, passport, contacts, address, department, position, salary, hire_date} = req.body;
+        const result = await pool.query(
+            `insert into employees (full_name, birth_date, passport, contacts, address, department, position, salary, hire_date)
+            values ($1, $2, $3, $4, $5, $6, $7, $8, $9) returning *`,
+            [full_name, birth_date, passport, contacts, address, department, position, salary, hire_date]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+//update
+app.put('/api/employees/:id', async (req, res) => {
+  try {
+    const emp = await pool.query('select fired from employees where id = $1', [req.params.id]);
+    if (emp.rows[0].fired) {
+      return res.status(403).json({ error: 'Уволенного сотрудника невозможно редактировать' });
+    }
+    const fields = Object.keys(req.body).map((key, i) => `${key} = $${i + 1}`).join(', ');
+    const values = Object.values(req.body);
+    values.push(req.params.id);
+    const result = await pool.query(`update employees set ${fields} where id = $${values.length} returning *`, values);
+    res.json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+//delete - dismissal
+app.patch('/api/employees/:id/fire', async (req, res) => {
+  try {
+    const result = await pool.query('UPDATE employees SET fired = true WHERE id = $1 RETURNING *', [req.params.id]);
+    res.json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
