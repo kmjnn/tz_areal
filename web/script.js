@@ -20,7 +20,7 @@ function renderTable(){
         row.className = emp.fired ? 'fired' : '';
         const birthDate = emp.birth_date ? new Date(emp.birth_date).toLocaleDateString('ru-RU') : '';
         const hireDate = emp.hire_date ? new Date(emp.hire_date).toLocaleDateString('ru-RU') : '';
-         
+
         row.innerHTML = `
             <td>${emp.full_name}</td>
             <td>${birthDate}</td>
@@ -106,20 +106,41 @@ async function searchEmployee(params) {
 }
 
 function openModal(id = null) {
-  editingId = id;
-  document.getElementById('modalTitle').textContent = id ? 'Редактировать' : 'Новый сотрудник';
-  if (id) {
-    fetch(`/api/employees/${id}`).then(res => res.json()).then(emp => {
-      Object.keys(emp).forEach(key => {
-        const input = document.getElementById(key);
-        if (input) input.value = emp[key] || '';
-      });
-    });
-  } else {
-    document.getElementById('employeeForm').reset();
-  }
-  document.getElementById('modal').style.display = 'block';
-  applyMasks();
+    editingId = id;
+    document.getElementById('modalTitle').textContent = id ? 'Редактировать сотрудника' : 'Новый сотрудник';
+    
+    if (id) {
+        fetch(`/api/employees/${id}`)
+          .then(res => res.json())
+          .then(emp => {
+                document.getElementById('full_name').value = emp.full_name || '';
+                if (emp.birth_date) {
+                    const birthDate = new Date(emp.birth_date);
+                    document.getElementById('birth_date').value = birthDate.toISOString().split('T')[0];
+                } else {
+                    document.getElementById('birth_date').value = '';
+                }
+                
+                document.getElementById('passport').value = emp.passport || '';
+                document.getElementById('contacts').value = emp.contacts || '';
+                document.getElementById('address').value = emp.address || '';
+                document.getElementById('department').value = emp.department || '';
+                document.getElementById('position').value = emp.position || '';
+                document.getElementById('salary').value = emp.salary || '';
+                
+                if (emp.hire_date) {
+                    const hireDate = new Date(emp.hire_date);
+                    document.getElementById('hire_date').value = hireDate.toISOString().split('T')[0];
+                } else {
+                    document.getElementById('hire_date').value = '';
+                }
+            });
+    } else {
+        document.getElementById('employeeForm').reset();
+    }
+    
+    document.getElementById('modal').style.display = 'block';
+    applyMasks();
 }
 
 function closeModal() {
