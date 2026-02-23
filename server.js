@@ -24,7 +24,7 @@ const pool = new Pool({
 app.get('/api/employees', async (req, res) => {
     try {
         const { department, position } = req.query;
-        let query = 'select * from employees where fired = false';
+        let query = 'select * from employees';
         let params = [];
         let paramIndex = 1;
         
@@ -39,7 +39,7 @@ app.get('/api/employees', async (req, res) => {
             query += ` and position ilike $${paramIndex}`;
             paramIndex++;
         }
-        query += ' order by full_name';
+        query += ' order by fired ASC, full_name ASC';
         
         const result = await pool.query(query, params);
         res.json(result.rows);
