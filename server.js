@@ -26,14 +26,18 @@ app.get('/api/employees', async (req, res) => {
         const { department, position } = req.query;
         let query = 'select * from employees where fired = false';
         let params = [];
+        let paramIndex = 1;
         
-        if (department) {
+        if (department && department.trim() !== '') {
             params.push(`%${department}%`);
-            query += ' and department ilike $${params.length}';
+            query += ` and department ilike $${paramIndex}`;
+            paramIndex++;
         }
-        if (position) {
+        
+        if (position && position.trim() !== '') {
             params.push(`%${position}%`);
-            query += ' and position ilike $${params.length}';
+            query += ` and position ilike $${paramIndex}`;
+            paramIndex++;
         }
         query += ' order by full_name';
         
