@@ -1,0 +1,202 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f5f5;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.filters, .search {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+input, button, textarea {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: #999;
+}
+
+button {
+    background: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background: #444;
+}
+
+button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+}
+
+th {
+    text-align: left;
+    padding: 12px 8px;
+    background: #f8f8f8;
+    border-bottom: 2px solid #ddd;
+    font-weight: 500;
+    color: #333;
+}
+
+td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #eee;
+}
+
+tr:hover {
+    background: #f9f9f9;
+}
+
+.fired {
+    background: #fff3f3;
+}
+
+.fired td:first-child {
+    position: relative;
+}
+
+.fired td:first-child::after {
+    content: ' (уволен)';
+    color: #d32f2f;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+td button {
+    padding: 4px 8px;
+    font-size: 12px;
+    margin: 0 2px;
+    background: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+td button:hover {
+    background: #e0e0e0;
+}
+
+td button:disabled {
+    background: #f5f5f5;
+    color: #999;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 8px;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+}
+
+.close:hover {
+    color: #333;
+}
+
+#modalTitle {
+    font-size: 20px;
+    margin-bottom: 20px;
+    padding-right: 30px;
+}
+
+label {
+    display: block;
+    margin-bottom: 15px;
+}
+
+label input, label textarea {
+    width: 100%;
+    margin-top: 5px;
+}
+
+textarea {
+    min-height: 60px;
+    resize: vertical;
+}
+
+.container > button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .filters, .search {
+        flex-direction: column;
+    }
+    
+    .filters input, .filters button {
+        width: 100%;
+        margin: 2px 0;
+    }
+}
