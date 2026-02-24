@@ -114,8 +114,7 @@ function openModal(id = null) {
           .then(emp => {
                 document.getElementById('full_name').value = emp.full_name || '';
                 if (emp.birth_date) {
-                    const birthDate = new Date(emp.birth_date);
-                    document.getElementById('birth_date').value = birthDate.toISOString().split('T')[0];
+                    document.getElementById('birth_date').value = emp.birth_date.substring(0, 10);
                 } else {
                     document.getElementById('birth_date').value = '';
                 }
@@ -126,10 +125,8 @@ function openModal(id = null) {
                 document.getElementById('department').value = emp.department || '';
                 document.getElementById('position').value = emp.position || '';
                 document.getElementById('salary').value = emp.salary || '';
-                
                 if (emp.hire_date) {
-                    const hireDate = new Date(emp.hire_date);
-                    document.getElementById('hire_date').value = hireDate.toISOString().split('T')[0];
+                    document.getElementById('hire_date').value = emp.hire_date.substring(0, 10);
                 } else {
                     document.getElementById('hire_date').value = '';
                 }

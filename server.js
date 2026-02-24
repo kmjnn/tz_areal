@@ -62,14 +62,29 @@ app.get('/api/employees/search/:name', async (req, res) => {
 
 //один по id
 app.get('/api/employees/:id', async (req, res) => {
-    try{
-        const result = await
-        pool.query('select * from employees where id = $1', [req.params.id]);
+    try {
+        const result = await pool.query(`
+            select 
+                id, 
+                full_name, 
+                birth_date::text as birth_date,
+                passport, 
+                contacts, 
+                address, 
+                department, 
+                position, 
+                salary, 
+                hire_date::text as hire_date,
+                fired 
+            from employees 
+            where id = $1
+        `, [req.params.id]);
+        
         res.json(result.rows[0]);
     } catch (err) {
         res.status(500).json({error: err.message});
     }
-})
+});
 
 //CRUD
 //create
