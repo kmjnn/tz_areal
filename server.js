@@ -26,25 +26,24 @@ app.get('/api/employees', async (req, res) => {
         const { department, position } = req.query;
         let query = 'select * from employees';
         let params = [];
-        let paramIndex = 1;
+        let conditions = [];
         
         if (department && department.trim() !== '') {
             params.push(`%${department}%`);
-            query += ` and department ilike $${paramIndex}`;
-            paramIndex++;
+            conditions.push(`department ilike $${params.length}`);
         }
         
         if (position && position.trim() !== '') {
             params.push(`%${position}%`);
-            query += ` and position ilike $${paramIndex}`;
-            paramIndex++;
+            conditions.push(`position ilike $${params.length}`);
         }
-        query += ' order by fired ASC, full_name ASC';
-        
+        if (conditions.length > 0) {
+            query += ' where ' + conditions.join(' and ');
+        }
+        query += ' order by fired asc, full_name asc';
         const result = await pool.query(query, params);
         res.json(result.rows);
     } catch (err) {
-        console.error(err);
         res.status(500).json({ error: err.message });
     }
 });

@@ -1,5 +1,4 @@
 let employees = [];
-let editEmp = null;
 
 async function loadEmployees(dept = '', pos = '') {
     try {
@@ -92,7 +91,7 @@ async function loadEmployees(dept = '', pos = '') {
   }
 }
 
-async function searchEmployee(params) {
+async function searchEmployee() {
     const name = document.getElementById('searchName').value;
     if (!name) return loadEmployees();
     try{
